@@ -1,4 +1,4 @@
-1. Connect to your Gitea web URL by running:
+1. Connect to your Gogs web URL by running:
 
 {{- if .Values.ingress.enabled }}
 
@@ -26,7 +26,7 @@
 
 {{- end }}
 
-2. Connect to your Gitea ssh port:
+2. Connect to your Gogs ssh port:
 
 {{- if contains "NodePort" .Values.service.ssh.serviceType }}
 

@@ -1,5 +1,5 @@
 {{/*
-Create helm partial for gitea server
+Create helm partial for gogs server
 */}}
 {{- define "initPostgres" }}
 {{ if (.Values.useInPodPostgres) }}

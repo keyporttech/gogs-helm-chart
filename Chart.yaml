@@ -1,10 +1,10 @@
 apiVersion: v2
-name: gitea
-version: 0.2.8
-appVersion: 1.12.4
-description: Git with a cup of tea
-icon: https://docs.gitea.io/images/gitea.png
-home: https://github.com/jfelten/gitea-helm-chart
+name: gogs
+version: 0.1.0
+appVersion: 0.12.3
+description: Gogs is a painless self-hosted Git service
+icon: https://gogs.io/img/hero.png
+home: https://github.com/keyporttech/gogs-helm-chart
 keywords:
 - git
 - issue tracker
@@ -13,8 +13,8 @@ keywords:
 - gitea
 - gogs
 sources:
-- https://github.com/go-gitea/gitea
-- https://hub.docker.com/r/gitea/gitea/
+- https://github.com/gogs/gogs
+- https://hub.docker.com/r/gogs/gogs/
 maintainers:
-- name: John Felten
-  email: john.felten@gmail.com
+- name: Keyporttech
+  email: info@keyporttech.com

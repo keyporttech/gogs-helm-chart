@@ -22,22 +22,19 @@ spec:
       {{- end }}
     spec:
       containers:
-      {{- if .Values.useInPodPostgres }}
-      {{ include "postgres" . | indent 6 }}
-      {{- end -}}
-      {{ include "gitea" . | indent 6 }}
+      {{ include "gogs" . | indent 6 }}
       {{ include "memcached" . | indent 6 }}
       initContainers:
       {{ include "init" . | indent 6 }}
       {{ include "initPostgres" . | indent 6 }}
       volumes:
-      - name: gitea-data
+      - name: gogs-data
       {{- if .Values.persistence.enabled }}
-        {{- if .Values.persistence.directGiteaVolumeMount }}
-{{ tpl .Values.persistence.directGiteaVolumeMount . | indent 8 }}
+        {{- if .Values.persistence.directGogsVolumeMount }}
+{{ tpl .Values.persistence.directGogsVolumeMount . | indent 8 }}
         {{- else }}
         persistentVolumeClaim:
-         claimName: {{ .Values.persistence.existingGiteaClaim | default (include "fullname" .) }}
+         claimName: {{ .Values.persistence.existingGogsClaim | default (include "fullname" .) }}
         {{- end }}
       {{- else }}
         emptyDir: {}
@@ -55,7 +52,7 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- end }}
-      - name: gitea-config
+      - name: gogs-config
         configMap:
           name: {{ template "fullname" . }}
 

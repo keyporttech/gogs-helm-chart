@@ -1,9 +1,9 @@
 {{/*
-Create helm partial for gitea server
+Create helm partial for gogs server
 */}}
-{{- define "gitea" }}
-- name: gitea
-  image: {{ .Values.images.gitea }}
+{{- define "gogs" }}
+- name: gogs
+  image: {{ .Values.images.gogs }}
   imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   env:
   - name: POSTGRES_PASSWORD
@@ -32,10 +32,10 @@ Create helm partial for gitea server
     successThreshold: 1
     failureThreshold: 3
   resources:
-{{ toYaml .Values.resources.gitea | indent 10 }}
+{{ toYaml .Values.resources.gogs | indent 10 }}
   volumeMounts:
-  - name: gitea-data
+  - name: gogs-data
     mountPath: /data
-  - name: gitea-config
-    mountPath: /etc/gitea
+  - name: gogs-config
+    mountPath: /etc/gogs
 {{- end }}

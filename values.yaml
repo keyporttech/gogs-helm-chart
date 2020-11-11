@@ -1,12 +1,11 @@
-## Gitea image
-## ref: https://hub.docker.com/r/gitea/gitea/tags/
+## gogs image
+## ref: https://hub.docker.com/r/gogs/gogs
 ##
 
 images:
-  gitea: gitea/gitea:1.12.4
-  postgres: "postgres:11"
+  gogs: gogs/gogs:0.12.3
   memcached: "memcached:1.5.19-alpine"
-  imagePullPolicy: Always
+  imagePullPolicy: IfNotPresent
   ## Specify imagePullSecrets
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
   ##
@@ -42,7 +41,7 @@ service:
     # sometimes if is necesary to access through an external port i.e. http(s)://<dns-name>:<external-port>
     externalPort: 8280
     externalHost: git.example.com
-    # some parts of gitea like the api use a redirect needs config if using non standard ports
+    # some parts of gogs like the api use a redirect needs config if using non standard ports
     # httpAPIPort: 8280
     # if serviceType is LoadBalancer
     # loadBalancerIP: "192.168.0.100"
@@ -65,7 +64,7 @@ service:
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
-  gitea:
+  gogs:
     requests:
       memory: 500Mi
       cpu: 1000m
@@ -89,9 +88,9 @@ resources:
 ##
 persistence:
   enabled: false
-  # existingGiteaClaim: gitea-gitea
-  # existingPostgresClaim: gitea-postgres
-  giteaSize: 10Gi
+  # existingGogsClaim: gogs-gogs
+  # existingPostgresClaim: gogs-postgres
+  gogsSize: 10Gi
   postgresSize: 5Gi
   # storageClass: glusterfs
   accessMode: ReadWriteMany
@@ -100,14 +99,14 @@ persistence:
 #    "helm.sh/resource-policy": keep
 
 ## if you want to mount a volume directly without using a storageClass or pvcs
-#  directGiteaVolumeMount:
+#  directGogsVolumeMount:
 #    glusterfs:
 #      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
-#      path: giteaData
+#      path: gogsData
 #  directPostgresVolumeMount:
 #    glusterfs:
 #      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
-#      path: giteaPostgresData
+#      path: gogsPostgresData
 
 # Connect to an external database
 # externalDB:
@@ -115,7 +114,7 @@ persistence:
 #   dbPassword: "<MY_PASSWORD>"
 #   dbHost: "service-name.namespace.svc.cluster.local" # or some external host
 #   dbPort: "5432"
-#   dbDatabase: "gitea"
+#   dbDatabase: "gogs"
 
 # valid types: postgres, mysql, mssql, sqllite
 dbType: "postgres"
@@ -138,7 +137,7 @@ inPodPostgres:
 
   # Create a database
   # Default: the postgres user
-  postgresDatabase: gitea
+  postgresDatabase: gogs
   # Specify initdb arguments, e.g. --data-checksums
   # ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
   # ref: https://www.postgresql.org/docs/current/static/app-initdb.html
@@ -178,7 +177,7 @@ config:
     enabled: false
     token: ""
 
-# Here you can set extra settings from https://docs.gitea.io/en-us/config-cheat-sheet/
+# Here you can set extra settings from https://gogs.io/docs/installation/configuration_and_run
 # The following is just an example
 # extra_config: |-
 #   [service]
