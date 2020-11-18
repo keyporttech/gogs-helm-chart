@@ -13,7 +13,7 @@ REGISTRY=registry.keyporttech.com
 DOCKERHUB_REGISTRY="keyporttech"
 CHART=gogs
 VERSION = $(shell yq r Chart.yaml 'version')
-#RELEASED_VERSION = $(shell helm repo add keyporttech https://keyporttech.github.io/helm-charts/ > /dev/null && helm repo update> /dev/null && helm show chart keyporttech/$(CHART) | yq - read 'version')
+RELEASED_VERSION = $(shell helm repo add keyporttech https://keyporttech.github.io/helm-charts/ > /dev/null && helm repo update > /dev/null && helm show chart keyporttech/$(CHART) | yq - read 'version')
 REGISTRY_TAG=${REGISTRY}/${CHART}:${VERSION}
 CWD = $(shell pwd)
 
