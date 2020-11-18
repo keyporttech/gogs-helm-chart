@@ -3,147 +3,195 @@
 ##
 
 images:
+  # image.gogs -- Gogs image
   gogs: gogs/gogs:0.12.3
+  # image.postgres -- Postgres image
+  postgres: "postgres:11"
+  # image.memcached--Memcached image
   memcached: "memcached:1.5.19-alpine"
+  # image.imagePullPolicy -- Image pull policy for all images
   imagePullPolicy: IfNotPresent
-  ## Specify imagePullSecrets
+  # Specify imagePullSecrets
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
   ##
   # imagePullSecrets: myregistrykey
-## cache settings
+
 memcached:
+  # memcahced.maxItemMemory--cache max size
   maxItemMemory: 64
+  # memcahced.verbosity--verbosity level
   verbosity: v
+  # memcached.extendedOptions -- Extended options
   extendedOptions: modern
+
 ## ingress settings - Optional
 ingress:
+  # ingress.enabled -- Enable/Disable ingress
   enabled: false
-  ## sets .ini PROTOCOL value
+  # ingress.protocol -- sets .ini PROTOCOL value
   # protocol: https
-  ## annotations used by the ingress - ex for k8s nginx ingress controller:
-  # ingress_annotations:
+  # ingress.annotations -- annotations used by the ingress - ex for k8s nginx ingress controller:
+  # ingress.annotations:
   #   kubernetes.io/ingress.class: nginx
   #   nginx.ingress.kubernetes.io/proxy-body-size: "0"
   #   nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
   #   nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
 ## tls support for the ingress
 # tls:
+    # tls.secretName -- Secret that stores TLS key
 #   - secretName: <TLS_SECRET>
+    # tls.hosts -- allowed hosts for the tls set up
 #     hosts:
 #       - 'git.example.com'
 
 ## chart defaults to using an ingress for http, but change to LoadBalancer if using you cluster supports it
 service:
   http:
+    # service.http.serviceType -- kubernetes service type for gogs
     serviceType: ClusterIP
+    # service.http.port -- kubernetes service port for gogs
     port: 3000
+    # service.http.nodePort -- kubernetes nodePort for gogs
     # nodePort: 30280
-    # sometimes if is necesary to access through an external port i.e. http(s)://<dns-name>:<external-port>
+    # service.http.externalPort -- sometimes it is necesary to access through an external port i.e. http(s)://<dns-name>:<external-port>
     externalPort: 8280
+    # service.http.externalHost -- gogs external host name
     externalHost: git.example.com
-    # some parts of gogs like the api use a redirect needs config if using non standard ports
+    # service.http.httpAPIPort -- some parts of gogs like the api use a redirect needs config if using non standard ports
     # httpAPIPort: 8280
-    # if serviceType is LoadBalancer
+    # service.http.LoadBalancerIP -- if serviceType is LoadBalancer
     # loadBalancerIP: "192.168.0.100"
+    # service.http.svc_annottations - optional gogs service annotations
     # svc_annotations:
     #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
     #   service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "a_subnet"
   ssh:
+    # service.ssh.serviceType -- ssh service type
     serviceType: ClusterIP
+    # service.ssh.port -- ssh service port
     port: 22
+    # service.ssh.nodePort -- k8s servjce node port for ssh
     # nodePort: 30222
-    # if serving on a different external port used for determining the ssh url in the gui
+    # service.ssh.externalPort -- if serving on a different external port used for determining the ssh url in the gui
     # externalPort: 8022
+    # service.ssh.externalHost -- ssh service external host name
     # externalHost: git.example.com
-    # if serviceType is LoadBalancer
+    # service.ssh.loadBalancerIP -- if serviceType is LoadBalancer
     # loadBalancerIP: "192.168.0.100"
+    # service.ssh.svc_annotations -- ssh service annotations
     # svc_annotations:
     #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
     #   service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "a_subnet"
+
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
   gogs:
     requests:
+      # resources.gogs.requests.memory -- requests memory resources for gogs containers
       memory: 500Mi
+      # resources.gogs.requests.cpu -- requests cpuresources for gogs containers
       cpu: 1000m
     limits:
+      # resources.gogs.limits.memory -- requests memory limits for gogs containers
       memory: 2Gi
+      # resources.gogs.limits.cpu -- requests memory cpu for gogs containers
       cpu: 1
   postgres:
     requests:
+      # resources.postgres.requests.memory -- requests memory resources for postgres containers
       memory: 200Mi
+      # resources.postgres.requests.cpu -- requests cpu resources for postgres containers
       cpu: 200m
     limits:
+      # resources.postgres.limits.memory -- requests memory limits for postgres containers
       memory: 2Gi
+      # resources.postgres.limits.cpu -- requests memory limits for postgres containers
       cpu: 1
   memcached:
     requests:
+      # resources.memcached.requests.memory -- requests memory resources for memcached containers
       memory: 64Mi
+      # resources.memcached.requests.cpu -- requests memory limits for memcached containers
       cpu: 50m
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ## ref:
 ##
 persistence:
+  # peristence.enabled - enable persistent storage for this chart
   enabled: false
+  # peristence.existingGogsClaim -- use an already provisioned outside this chart for gogs
   # existingGogsClaim: gogs-gogs
+  # peristence.existingGogsClaim -- use an already provisioned outside this chart for postgres
   # existingPostgresClaim: gogs-postgres
+  # peristence.gogsSize -- size of the gogs persistent volume
   gogsSize: 10Gi
+  # peristence.postgresSize -- size of the gogs persistent volume
   postgresSize: 5Gi
+  # peristence.storageClass -- storage class for dynamically provisioned storage
   # storageClass: glusterfs
+  # persistence.accessMode - access for for dynamically provisioned
   accessMode: ReadWriteMany
-## addtional annotations for hte pvcs  uncommenting below will prevent helm from deleting the pvc when hte chart is deleted
-#  annotations:
-#    "helm.sh/resource-policy": keep
+  # persistence.annotations -- addtional annotations for hte pvcs  uncommenting below will prevent helm from deleting the pvc when hte chart is deleted
+# annotations:
+#   "helm.sh/resource-policy": keep
 
-## if you want to mount a volume directly without using a storageClass or pvcs
+#  persistence.directGogsVolumeMount -- if you want to mount a volume directly without using a storageClass or pvcs
 #  directGogsVolumeMount:
 #    glusterfs:
 #      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
 #      path: gogsData
+#  persistence.directPostgresVolumeMount -- if you want to mount a volume directly without using a storageClass or pvcs
 #  directPostgresVolumeMount:
 #    glusterfs:
 #      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
 #      path: gogsPostgresData
 
-# Connect to an external database
+# persistence.externalDB -- Connect to an external database
+#
 # externalDB:
+    # externalDB.dbUser -- external db user
 #   dbUser: "postgres"
+    # externalDB.dbPassword -- external db passsword
 #   dbPassword: "<MY_PASSWORD>"
+    # externalDB.dbHost -- external db host
 #   dbHost: "service-name.namespace.svc.cluster.local" # or some external host
+    # externalDB.dbPort - external DB port
 #   dbPort: "5432"
+    # externalDB.dbDatabase -- external db database with gogs data
 #   dbDatabase: "gogs"
 
 # valid types: postgres, mysql, mssql, sqllite
+# dbType - database type
 dbType: "postgres"
+# useInPodPostgres -- use the chart built in db
 useInPodPostgres: true
 inPodPostgres:
+  # inPodPostgres.secret -- secret with generated credentials
   secret: postgresecrets
+  # inPodPostgres.subPath -- subPath
   subPath: "postgresql-db"
+  # inPodPostgres.dataMountPath - directory to mount postgres data
   dataMountPath: /var/lib/postgresql/data/pgdata
-  # Create a database user
-  # Default: postgres
+  # inPodPostgres.postgresUser -- Create a database user - otherwise defaults: postgres
   # postgresUser:
-  # Default: random 10 character string
+  # inPodPostgres.postgresPassword -- set db password otherwises defaults: random 10 character string
   # postgresPassword:
 
-  # Inject postgresPassword via a volume mount instead of environment variable
+  # inPosPostgres.usePasswordFile -- Inject postgresPassword via a volume mount instead of environment variable
   usePasswordFile: false
   # Use Existing secret instead of creating one
-  # It must have a postgres-password key containing the desired password
+  # inPosPostgres.existingSecret -- use an existing secret for postgres. It must have a postgres-password key containing the desired password
   # existingSecret: 'secret'
 
-  # Create a database
-  # Default: the postgres user
+  # inPodPostgres.postgresDatabase -- Create a database if unset default: the postgres user
   postgresDatabase: gogs
-  # Specify initdb arguments, e.g. --data-checksums
-  # ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
-  # ref: https://www.postgresql.org/docs/current/static/app-initdb.html
+  # inPodPostgres.postgresInitdbArgs -- Specify initdb arguments, e.g. --data-checksums ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args ref: https://www.postgresql.org/docs/current/static/app-initdb.html
   # postgresInitdbArgs:
 
-  ## Specify runtime config parameters as a dict, using camelCase, e.g.
+  # inPodPostgres.posgresConfig -- Specify runtime config parameters as a dict, using camelCase, e.g.
   ## {"sharedBuffers": "500MB"}
   ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
   # postgresConfig:
@@ -158,7 +206,9 @@ deploymentAnnotations: {}
 podAnnotations: {}
 # In order to disable initial install screen you must have secretKey and disableInstaller=true
 config:
+  # config.secreyKey -- secret key name
   #  secretKey: define_your_secret
+  # config.disableInstaller -- disables the gogs installer
   disableInstaller: false
   offlineMode: false
   requireSignin: false

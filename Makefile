@@ -66,3 +66,9 @@ publish-public-repository:
 deploy: publish-local-registry publish-public-repository
 
 .PHONY:deploy
+
+generate-docs:
+	@echo "generating documentation..."
+	@echo "generating README.md"
+	helm-docs --chart-search-root=./ --template-files=./README.md.gotmpl --template-files=./_templates.gotmpl --output-file=./README.md --log-level=trace
+.PHONY: generate-docs

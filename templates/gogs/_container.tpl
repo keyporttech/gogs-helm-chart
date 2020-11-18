@@ -37,5 +37,5 @@ Create helm partial for gogs server
   - name: gogs-data
     mountPath: /data
   - name: gogs-config
-    mountPath: /etc/gogs
+    mountPath: /app/gogs/custom
 {{- end }}

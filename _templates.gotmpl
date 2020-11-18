@@ -1,0 +1,125 @@
+ helm Chart{{ define "extra.logo" -}}
+```
+          ,-.
+ ,     ,-.   ,-.
+/ \   (   )-(   )
+\ |  ,.>-(   )-<
+ \|,' (   )-(   )
+  Y ___`-'   `-'
+  |/__/   `-'
+  |
+  |
+  |    -hi-
+__|_____________
+```
+{{- end }}
+
+{{ define "extra.introduction" -}}
+## Introduction
+
+This is a kubernetes helm chart for [Gogs](https://gogs.io/).
+
+{{- end }}
+{{ define "extra.requirementsSection" -}}
+* A kubernetes cluster ( most recent release recommended)
+* Helm 3 client
+* Please ensure that nodepools have enough resources to run both a web application and database
+* An external database if not using the in pod database
+
+{{- end }}
+
+{{ define "extra.chartInstallation" -}}
+## Installing the Chart
+
+This chart is published in [keyporttech/charts](https://github.com/keyporttech/helm-charts). To install the chart, first add the keyporttech helm repo:
+```bash
+helm repo add keyporttech https://keyporttech.github.io/helm-charts/
+```
+Then to install with the release name `gogs` in the namespace `gogs` with the customized values in custom_values.yaml run:
+
+```bash
+$ helm install -- values custom_values.yaml --name gogs --namespace gogs keyporttech/gogs
+```
+or locally:
+
+```bash
+$ helm install --name gogs --namespace gogs .
+```
+> **Tip**: You can use the default [values.yaml](values.yaml)
+
+{{- end }}
+
+{{ define "extra.chartUninstall" -}}
+## Uninstalling the Chart
+
+To uninstall/delete the `my-release` deployment:
+
+```console
+$ helm uninstall my-release -n my-namespace
+```
+
+All resources associated with the last release of the chart as well as its release history will be deleted.
+{{- end }}
+
+{{ define "extra.db" -}}
+### Database config in pod vs external db
+
+By default the chart will spin up a postgres container inside the pod. It can also work with external databases. To disable the in pod database and use and external one use the following values:
+
+```yaml
+dbType: "postgres"
+useInPodPostgres: false
+
+#Connect to an external database
+externalDB:
+  dbUser: "gogs"
+  dbPassword: "<MY_PASSWORD>"
+  dbHost: "db-service-name.namespace.svc.cluster.local" # or some external host
+  dbPort: 5432
+  dbDatabase: "gogs"
+```
+
+This chart has only been tested using a postgres database, but others should be possible.
+
+## Data Management
+
+This chart will use and create optional persistent volume claims for both postgres (if using in pod db) and gogs data. By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
+
+* prevent helm from deleting the pvcs it creates. Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations
+
+```yaml
+persistence:
+  annotations:
+    "helm.sh/resource-policy": keep
+```
+* create a pvc outside the chart and configure the chart to use it. Do this by setting the persistence existingGogsClaim and existingPostgresClaim properties.
+
+```yaml
+ existingGogsClaim: gogs-gogs
+ existingPostgresClaim: gogs-postgres
+```
+a trick that can be is used to first set the helm.sh/resource-policy annotation so that the chart generates the pvcs, but doesn't delete them. Upon next deplyment set the exsiting claim names to the generated values.
+{{- end }}
+
+{{ define "extra.ingress" }}
+## Ingress And External Host/Ports
+
+Gogs requires ports to be exposed for both web and ssh traffic. The chart is flexible and allow a combination of either ingresses, loadblancer, or nodeport services.
+
+To expose the web application this chart will generate an ingress using the ingress controller of choice if specified. If an ingress is enabled services.http.externalHost must be specified. To expose SSH services it relies on either a LoadBalancer or NodePort.
+
+{{- end }}
+
+{{ define "extra.configuration" -}}
+# Configuration
+
+Refer to [values.yaml](values.yaml) for the full run-down on defaults.
+
+The following table lists the configurable parameters of this chart and their default values.
+{{- end }}
+
+{{ define "extra.contributing" -}}
+## Contributing
+
+Please see [keyporttech charts contribution guidelines](https://github.com/keyporttech/helm-charts/blob/master/CONTRIBUTING.md)
+{{- end }}
