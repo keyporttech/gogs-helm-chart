@@ -10,6 +10,8 @@ Gogs is a painless self-hosted Git service
 
 This is a kubernetes helm chart for [Gogs](https://gogs.io/).
 
+Looking for the [gitea](https://gitea.io/en-us/) version of this chart? See: [here](https://github.com/jfelten/gitea-helm-chart)
+
 * A kubernetes cluster ( most recent release recommended)
 * Helm 3 client
 * Please ensure that nodepools have enough resources to run both a web application and database
