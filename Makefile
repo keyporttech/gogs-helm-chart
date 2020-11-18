@@ -67,7 +67,7 @@ deploy: publish-local-registry publish-public-repository
 	rm -rf /tmp/helm-$(CHART)
 	rm -rf helm-charts
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
-	git clone git@github.com:keyporttech/$(CHART).git /tmp/helm-$(CHART)
+	git clone git@github.com:keyporttech/gogs-helm-chart.git /tmp/helm-$(CHART)
 	cd /tmp/helm-$(CHART) && git remote add downstream ssh://git@ssh.git.keyporttech.com/keyporttech/gogs-helm-chart.git
 	cd /tmp/helm-$(CHART) && git config --global user.email "bot@keyporttech.com"
 	cd /tmp/helm-$(CHART) && git config --global user.name "keyporttech-bot"
