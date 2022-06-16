@@ -22,13 +22,13 @@ data:
     {{- else }}
     DOMAIN = localhost
     EXTERNAL_URL = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s/
-    {{- end -}}
+    {{- end }}
 
     {{- if .Values.service.http.externalHost }}
     DOMAIN = {{ .Values.service.http.externalHost }}
     {{- else }}
     DOMAIN = {{ template "fullname" . }}-http.{{ .Release.Namespace }}.svc.cluster.local
-    {{- end -}}
+    {{- end }}
 
     HTTP_PORT = {{ .Values.service.http.port }}
     UNIX_SOCKET_PERMISSION = 666
